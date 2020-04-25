@@ -54,6 +54,7 @@ public class Main {
                 //.dob(faker.date().toString())
                 .name(faker.name().name())
                 .email(faker.internet().emailAddress())
+                .gender(faker.options().option())
                 .country(faker.address().country())
                 .state(faker.address().state())
                 .city(faker.address().city())
@@ -72,7 +73,7 @@ public class Main {
         for (int i = 0; i < 1000; i++) {
             Person person = randomPerson();
         }
-        randomPerson().forEach(log::info);
+        //randomPerson().forEach(log::info);
 
         emf.close();
     }
