@@ -16,41 +16,6 @@ public class Main {
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-example");
 
 
-    /*    private static void randomPerson(){
-
-            EntityManager em = emf.createEntityManager();
-
-            Person person = new Person();
-
-            Faker faker = new Faker();
-
-            Address address = new Address();
-
-            em.getTransaction().begin();
-            em.persist(address);
-
-            address.country = faker.address().country();
-            //System.out.println(address.country);
-            address.state = faker.address().state();
-            address.city = faker.address().city();
-            address.streetAddress = faker.address().streetAddress();
-            address.zip = faker.address().zipCode();
-            em.getTransaction().commit();
-            System.out.println(address);
-
-
-            String profession = faker.company().profession();
-
-            String dob = faker.date().toString();
-
-            String email = faker.internet().emailAddress();
-
-            String name = faker.name().fullName();
-
-            String gender = faker.options().option();
-            em.close();
-    }*/
-
     private static Faker faker = new Faker(new Locale("en"));
 
     private static Person randomPerson() {
@@ -59,12 +24,12 @@ public class Main {
                 .dob(faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                 .name(faker.name().name())
                 .email(faker.internet().emailAddress())
-                //.gender(faker.options().option(Class<FEMALE,MALE> person.Person.Gender))
-                //.country(faker.address().country())
-                //.state(faker.address().state())
-                //.city(faker.address().city())
-                //.streetAddress(faker.address().streetAddress())
-                //.zip(faker.address().zipCode())
+                .gender(faker.options().option(Person.Gender.class))
+                //.address.country(faker.address().country())
+                //.address.state(faker.address().state())
+                //.address.city(faker.address().city())
+                //.address.streetAddress(faker.address().streetAddress())
+                //.address.zip(faker.address().zipCode())
                 .build();
 
         //public <E extends Enum<E>> E option(Class<E> Gender)
@@ -78,8 +43,8 @@ public class Main {
 
         for (int i = 0; i < 1000; i++) {
             Person person = randomPerson();
+            System.out.println(person);
         }
-        //randomPerson().forEach(log::info);
 
         emf.close();
     }
