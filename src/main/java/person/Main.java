@@ -4,7 +4,12 @@ import com.github.javafaker.Faker;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.time.ZoneId;
 import java.util.Locale;
+import java.util.*;
+
+import static person.Person.Gender.FEMALE;
+import static person.Person.Gender.MALE;
 
 public class Main {
 
@@ -51,18 +56,19 @@ public class Main {
     private static Person randomPerson() {
         Person person = Person.builder()
                 .profession(faker.company().profession())
-                //.dob(faker.date().toString())
+                .dob(faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                 .name(faker.name().name())
                 .email(faker.internet().emailAddress())
-                .gender(faker.options().option())
-                .country(faker.address().country())
-                .state(faker.address().state())
-                .city(faker.address().city())
-                .streetAddress(faker.address().streetAddress())
-                .zip(faker.address().zipCode())
+                //.gender(faker.options().option(Class<FEMALE,MALE> person.Person.Gender))
+                //.country(faker.address().country())
+                //.state(faker.address().state())
+                //.city(faker.address().city())
+                //.streetAddress(faker.address().streetAddress())
+                //.zip(faker.address().zipCode())
                 .build();
-        //java.util.Date dob;
-        //java.time.LocalDate localDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        //public <E extends Enum<E>> E option(Class<E> Gender)
+
 
         return person;
     }

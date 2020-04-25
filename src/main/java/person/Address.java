@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Builder
 @Embeddable
-public class Address {
+public class Address  {
 
     @Column(nullable = false)
     public String country;

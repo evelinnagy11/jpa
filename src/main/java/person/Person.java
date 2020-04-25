@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Entity
 public class Person {
 
-    public static enum  Gender {
+    public static enum Gender {
         FEMALE, MALE;
     }
 
