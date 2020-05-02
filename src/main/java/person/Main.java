@@ -1,22 +1,32 @@
 package person;
 
 import com.github.javafaker.Faker;
+import lombok.extern.log4j.Log4j2;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.ZoneId;
 import java.util.Locale;
-import java.util.*;
 
-import static person.Person.Gender.FEMALE;
-import static person.Person.Gender.MALE;
-
+@Log4j2
 public class Main {
 
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-example");
 
 
     private static Faker faker = new Faker(new Locale("en"));
+
+    private static Address randomAddress() {
+        return Address.builder()
+                .country(faker.address().country())
+                .state(faker.address().state())
+                .city(faker.address().city())
+                .streetAddress(faker.address().streetAddress())
+                .zip(faker.address().zipCode())
+                .build();
+
+    }
 
     private static Person randomPerson() {
         Person person = Person.builder()
@@ -25,28 +35,46 @@ public class Main {
                 .name(faker.name().name())
                 .email(faker.internet().emailAddress())
                 .gender(faker.options().option(Person.Gender.class))
-                //.address.country(faker.address().country())
-                //.address.state(faker.address().state())
-                //.address.city(faker.address().city())
-                //.address.streetAddress(faker.address().streetAddress())
-                //.address.zip(faker.address().zipCode())
+                .address(randomAddress())
                 .build();
-
-        //public <E extends Enum<E>> E option(Class<E> Gender)
 
 
         return person;
     }
 
+    private static void generatePerson(int n) {
+        randomPerson();
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            for (int i = 0; i < n; i++) {
+                em.persist(randomPerson());
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
+    }
+
+    private static void listPersons(){
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.createQuery("SELECT p FROM Person p", Person.class).getResultStream().forEach(log::info);
+        } finally {
+            em.close();
+        }
+    }
 
     public static void main(String[] args) {
 
-        for (int i = 0; i < 1000; i++) {
-            Person person = randomPerson();
-            System.out.println(person);
+        try{
+            int n = args.length > 0 ? Integer.parseInt(args[0]) : 1000;
+            generatePerson(n);
+            listPersons();
+        } finally {
+            emf.close();
         }
-
-        emf.close();
     }
 
 }
